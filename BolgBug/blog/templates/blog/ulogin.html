@@ -1,0 +1,68 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+{% load static %}
+{% load socialaccount %}
+<!--<link rel="stylesheet" href="{% static 'css/ulogin.css' %}"> -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <br><br><br><br>
+            <div class="card my-5">
+                <form class="card-body cardbody-color p-lg-5" method="post" id="loginForm">
+                    {% csrf_token %}
+                    <div class="text-center">
+                        <img src="{% static 'image/logo.jpg' %}"
+                            class="img-fluid profile-image-pic img-thumbnail rounded-circle my-3" width="200px"
+                            alt="profile">
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="username" name="uname" placeholder="Name">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="password" name="upassword" placeholder="Password">
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-color px-5 mb-3 w-100" !important>Login</button>
+                    </div>
+
+                    <div id="emailHelp" class="form-text text-center mt-3 text-dark">
+                        Not Registered? <a href="/signup" class="text-dark fw-bold">Create an Account</a>
+                    </div>
+                    <br>
+                    <hr>
+                    <br>
+                    <!-- Button for Google Login -->
+                    <div class="text-center">
+                        <a href="{% provider_login_url 'google' %}" class="btn btn-light px-5 w-100 d-flex align-items-center justify-content-center border">
+                            <img src="{% static 'image/google.png' %}" width="20" class="me-2"> Continue with Google
+                        </a>
+                    </div>
+
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for frontend validation -->
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+        var username = document.getElementById('username').value.trim();
+        var password = document.getElementById('password').value.trim();
+
+        if (!username || !password) {
+            event.preventDefault(); // Stop form submission
+            Swal.fire({
+                icon: 'warning',
+                title: 'Error',
+                text: 'Please fill in all fields!',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    });
+</script>
+
+{% endblock %}

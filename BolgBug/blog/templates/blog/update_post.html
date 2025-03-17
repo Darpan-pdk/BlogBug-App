@@ -1,0 +1,89 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="container custom-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light w-100">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li><a href="/home"><img class="w-50" src="{% static 'image/pho.png' %}" alt=""></a></li>
+                <p><h3>Update Post</h3></p>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Profile
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/newpost">New Post</a>
+                        <a class="dropdown-item" href="/mypost">My Posts</a>
+                        <a class="dropdown-item" href="/signout">Sign Out</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </nav>
+    <br><br><br>
+
+    <form method="post" id="updatePostForm">
+        {% csrf_token %}
+        <div class="container custom-container" style="max-width: 1250px;">
+            <br><br>
+            <h1 class="fw-bolder"> Update Post </h1>
+            <hr><br>
+            <div class="mb-3">
+                <h3><label for="title">Title</label></h3>
+                <input type="text" class="form-control" id="title" name="tittle" value="{{ post.tittle }}" required>
+            </div>
+            <div class="form-group">
+                <h3><label for="content">Content</label></h3>
+                <textarea class="form-control" id="content" name="content" rows="7" required>{{ post.content }}</textarea>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="/mypost" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var form = document.getElementById('updatePostForm');
+        var originalTitle = "{{ post.tittle|escapejs }}".trim();
+        var originalContent = "{{ post.content|escapejs }}".trim();
+
+        form.addEventListener('submit', function (event) {
+            var updatedTitle = document.getElementById('title').value.trim();
+            var updatedContent = document.getElementById('content').value.trim();
+
+            if (!updatedTitle || !updatedContent) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Please fill in both the title and content fields before updating!',
+                });
+                return;
+            }
+
+            if (updatedTitle === originalTitle && updatedContent === originalContent) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'info',
+                    title: 'No Changes Detected',
+                    text: 'You have not made any changes to your post.',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+</script>
+
+{% endblock %}
